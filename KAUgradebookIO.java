@@ -18,6 +18,12 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class KAUgradebookIO {
+    public static int aCount = 0;
+    public static int bCount = 0;
+    public static int cCount = 0;
+    public static int dCount = 0;
+    public static int fCount = 0;
+          
 
     /**
      * @param args the command line arguments
@@ -177,28 +183,81 @@ char letterGrade = getLetterGrade(fGrade);
                      "     Letter Grade: "+students[index].getLetterGrade());
     }
     
-    public static void displayStatistics(Scanner input, PrintWriter output, Student[] students){
+    public static void displayStatistics(Scanner input, PrintWriter output, Student[] students, String course, String f, String l){
     //1. display statistical results for the class
-    }
+        output.println("Command: DISPLAYSTATS");
+        output.println("Statistical Results of "+ course+" (Instructor: "+f+" "+ l+"):");
+        output.println("\tTotal number of student records: "+Student.getNumStudents());
+        //calculate average score traversingly for all students
+        double sum =0;        
+        for (int i = 0; i < students.length; i++) {
+            sum = students[i].getFinalGrade() + sum;  
+        }       
+        double average = sum/Student.getNumStudents();
+        output.println("\tAverage Score: "+average);
     
+        //calculate highest and lowest score(max method)
+        double max = 0;
+        double min = 0;
+        for (int i = 0; i < Student.getNumStudents(); i++) {
+           max = Math.max(max, students[i].getFinalGrade());
+           min = Math.min(min, students[i].getFinalGrade());
+        }
+        output.println("\tHighest Score: "+max);
+        output.println("\tLowest Score: "+min);
+        
+        //count the a's, b's, c's, d's, and F's..
+        output.println("\tTotal 'A' Grades: "+aCount+" ( "+(aCount*Student.getNumStudents()/100)+" % of class)");
+        output.println("\tTotal 'B' Grades: "+bCount+" ( "+(bCount*Student.getNumStudents()/100)+" % of class)");
+        output.println("\tTotal 'C' Grades: "+cCount+" ( "+(cCount*Student.getNumStudents()/100)+" % of class)");
+        output.println("\tTotal 'D' Grades: "+dCount+" ( "+(dCount*Student.getNumStudents()/100)+" % of class)");
+        output.println("\tTotal 'F' Grades: "+fCount+" ( "+(fCount*Student.getNumStudents()/100)+" % of class)");
+        
+    }
     public static void displayAllStudenets(Scanner input, PrintWriter output, Student[] students){
     //1. display the record of all students along with their grade
+        output.println("Command: DISPLAYSTUDENTS");
+        output.println("***Class Roster and Grade Sheet***");   
+        
     //2. if there is no student, an error message should print
-    //3. else all students should be printed
+        if(Student.getNumStudents()==0)
+            output.println("ERROR: There are no students in the system");
+        
+    //3. else all students informations should be printed
+        else{
+            for (int i = 0; i < Student.getNumStudents(); i++) {
+                output.println("- Student Record for "+students[i].getfName()+" "+students[i].getlName()+" (ID # "+students[i].getiD()+") :");
+                output.println("\tExam 1:\t"+students[i].getExamGrades(0));
+                output.println("\tExam 2:\t"+students[i].getExamGrades(1));
+                output.println("\tFinal Exam:\t"+students[i].getExamGrades(2));
+                output.println("\tFinal Grade:\t"+students[i].getFinalGrade());
+                output.println("\tFinal Grade:\t"+students[i].getLetterGrade());
+            }//end of for loop
+        
+        }
     
     }
     
     public static char getLetterGrade(double fGrade){
     //1. determin the letter grade of the student from their final, numerical grade(Standard Scale) then return letter Grade
         if (fGrade > +90) {
+            aCount++;
             return 'A';
+            
         } else if ((fGrade < 90) && (fGrade >= 80)) {
+            bCount++;
             return 'B';
+            
         } else if ((fGrade < 80) && (fGrade >= 70)) {
+            cCount++;
             return 'C';
+            
         } else if ((fGrade < 70) && (fGrade >= 60)) {
+           dCount++;
            return 'D';
+           
         } else {
+            fCount++;
             return 'F';
         }
         
